@@ -1,6 +1,6 @@
 import * as superagent from 'superagent'
 import {action, toJS} from 'mobx'
-import storedObservable from '../util/stored-observable'
+import storedObservable from './util/stored-observable'
 
 const state = storedObservable('contact-list-state', {
   contacts: [],

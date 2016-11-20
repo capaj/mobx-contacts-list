@@ -8,10 +8,13 @@
   },
   "scripts": {
     "start": "webpack-dev-server --config webpack-dev-server.config.js --progress --inline --colors",
-    "build": "webpack --config webpack-production.config.js --progress --colors"
+    "build": "webpack --config webpack-production.config.js --progress --colors",
+    "pretest": "standard",
+    "test": "ava"
   },
   "private": true,
   "devDependencies": {
+    "ava": "^0.17.0",
     "babel-core": "^6.18.2",
     "babel-eslint": "^7.1.1",
     "babel-loader": "^6.2.8",

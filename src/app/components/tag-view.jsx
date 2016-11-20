@@ -1,10 +1,10 @@
 import React from 'react'
 import {observer} from 'mobx-react'
-import {action, observable} from 'mobx'
+import {action} from 'mobx'
 import FlatButton from 'material-ui/FlatButton'
 import {Card, CardActions, CardTitle, CardText} from 'material-ui/Card'
 import TextField from 'material-ui/TextField'
-import state from '../stores/global-store'
+import state from '../store'
 
 @observer
 export class TagView extends React.Component {

@@ -6,7 +6,7 @@ import RefreshIndicator from 'material-ui/RefreshIndicator'
 import RaisedButton from 'material-ui/RaisedButton'
 
 import ContactEntryView from './contact-entry-view'
-import state, {createRandomContact} from '../stores/global-store'
+import state, {createRandomContact} from '../store'
 
 @observer
 export class ContactsOverview extends Component {

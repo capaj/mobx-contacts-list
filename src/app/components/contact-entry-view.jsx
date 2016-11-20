@@ -3,7 +3,7 @@ import {observer} from 'mobx-react'
 
 import {ListItem} from 'material-ui/List'
 import Avatar from 'material-ui/Avatar'
-import state from '../stores/global-store'
+import state from '../store'
 import getDisplayName from '../util/get-display-name'
 
 const ContactEntryView = ({contact, index}) => (

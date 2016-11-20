@@ -5,7 +5,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import {deepOrange500} from 'material-ui/styles/colors'
 import DevTools from 'mobx-react-devtools'
 import {Card, CardTitle} from 'material-ui/Card'
-import state from '../stores/global-store'
+import state from '../store'
 
 import {ContactsOverview} from './contacts-overview'
 import {TagsOverview} from './tags-overview'

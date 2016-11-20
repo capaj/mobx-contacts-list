@@ -7,7 +7,7 @@ import {Card, CardActions, CardTitle, CardText} from 'material-ui/Card'
 import Toggle from 'material-ui/Toggle'
 import TextField from 'material-ui/TextField'
 import AutoComplete from 'material-ui/AutoComplete'
-import state from '../stores/global-store'
+import state from '../store'
 import getDisplayName from '../util/get-display-name'
 
 @observer
