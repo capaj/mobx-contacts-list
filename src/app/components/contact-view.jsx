@@ -7,13 +7,15 @@ import {Card, CardActions, CardTitle, CardText} from 'material-ui/Card'
 import Toggle from 'material-ui/Toggle'
 import TextField from 'material-ui/TextField'
 import AutoComplete from 'material-ui/AutoComplete'
+import state from '../stores/global-store'
+import getDisplayName from '../util/get-display-name'
 
 @observer
 export class ContactView extends React.Component {
   @observable firstNameValue
   @observable lastNameValue
   @observable autoSave
-  @observable tagId = 0 // AutoComplete has no reset api, abuse react keys..
+  @observable tagId = state.tags.length // AutoComplete has no reset api, abuse react keys..
 
   componentWillMount () {
     this.resetInputValues(this.props)
@@ -22,13 +24,15 @@ export class ContactView extends React.Component {
   componentWillReceiveProps (nextProps) {
     this.resetInputValues(nextProps)
   }
-
+  getAvailableTags () {
+    return state.tags.filter(tag => this.props.contact.tags.indexOf(tag.id) === -1)
+  }
   render () {
     const {contact} = this.props
     return <Card>
       <CardTitle
-        title={contact.displayName}
-        subtitle={contact.username}
+        title={getDisplayName(contact.name)}
+        subtitle={contact.login.username}
         children={<span style={{ float: 'left', marginLeft: '43%' }}>
           Auto Save: <Toggle style={{ width: 'auto', float: 'right' }} defaultToggled={contact.autoSave} onToggle={this.onToggle} />
         </span>}
@@ -48,11 +52,13 @@ export class ContactView extends React.Component {
         />
         <br />
         <h2>Tags</h2>
-        <p>{ contact.tags.map(tag => tag.name).join(', ') }</p>
+        <p>{contact.tags.map((tagId) => {
+          return state.tags.find((tag) => tag.id === tagId).name
+        }).join(', ')}</p>
         <AutoComplete
           floatingLabelText='Add tag'
           key={this.tagId}
-          dataSource={this.getAvailableTags()}
+          dataSource={this.getAvailableTags().map((tag) => tag.name)}
           onNewRequest={this.onSelectTag}
         />
 
@@ -81,32 +87,38 @@ export class ContactView extends React.Component {
   }
 
   @action onDelete = () => {
-    this.props.viewState.selectNothing()
-    this.props.contact.delete()
+    state.contacts.remove(state.selected)
+    state.selectNothing()
   }
 
   @action onSave = () => {
-    this.props.contact.updateFirstName(this.firstNameValue)
-    this.props.contact.updateLastName(this.lastNameValue)
-    this.props.contact.updateAutoSave(this.autoSave)
+    const {contact} = this.props
+    contact.name.first = this.firstNameValue
+    contact.name.last = this.lastNameValue
+    contact.autoSave = this.autoSave
   }
 
   @action onCancel = () => {
     this.resetInputValues(this.props)
   }
 
-  getAvailableTags = () => this.props.contact.getAvailableTags().map(tag => tag.name);
-
   @action onSelectTag = (value) => {
-    this.props.contact.addTag(value)
+    const {contact} = this.props
+    let tag = state.tags.find((tag) => tag.name === value)
+    if (!tag) {
+      tag = {name: value, id: state.tags.length}
+      state.tags.push(tag)
+    }
+    contact.tags.push(tag.id)
+
     this.autoSave && this.onSave()
-    this.tagId++
   }
 
   @action resetInputValues (props) {
-    this.firstNameValue = props.contact.firstName
-    this.lastNameValue = props.contact.lastName
-    this.autoSave = props.contact.autoSave
-    this.tagId++
+    const {contact} = props
+
+    this.firstNameValue = contact.name.first
+    this.lastNameValue = contact.name.last
+    this.autoSave = contact.autoSave
   }
 }

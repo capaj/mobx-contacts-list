@@ -6,19 +6,19 @@ import RefreshIndicator from 'material-ui/RefreshIndicator'
 import RaisedButton from 'material-ui/RaisedButton'
 
 import ContactEntryView from './contact-entry-view'
+import state, {createRandomContact} from '../stores/global-store'
 
 @observer
 export class ContactsOverview extends Component {
   render () {
-    const {contactStore, viewState} = this.props
     return <List>
-      <RaisedButton label='Add Contact' primary onClick={() => contactStore.createRandomContact()} style={{
+      <RaisedButton label='Add Contact' primary onClick={() => createRandomContact()} style={{
         marginLeft: 12
-      }} /> {contactStore.isLoading
+      }} /> {state.pendingRequestCount > 0
         ? <RefreshIndicator size={40} left={10} top={0} status='loading' style={loaderStyle} />
         : null
       }
-      {contactStore.getContacts().map(contact => <ContactEntryView contact={contact} key={contact.id} viewState={viewState} />)}
+      {state.contacts.map((contact, index) => <ContactEntryView contact={contact} index={index} key={index} />)}
     </List>
   }
 }

@@ -4,28 +4,21 @@ import {action, observable} from 'mobx'
 import FlatButton from 'material-ui/FlatButton'
 import {Card, CardActions, CardTitle, CardText} from 'material-ui/Card'
 import TextField from 'material-ui/TextField'
+import state from '../stores/global-store'
 
 @observer
 export class TagView extends React.Component {
-  @observable tag;
-
-  componentWillMount () {
-    this.resetTag(this.props)
-  }
-
-  componentWillReceiveProps (newProps) {
-    this.resetTag(newProps)
-  }
 
   render () {
+    const {tag} = this.props
     return <Card>
       <CardTitle
-        title={`Tag ${this.tag.name}`}
+        title={`Tag ${tag.name}`}
         />
       <CardText>
         <TextField
           floatingLabelText='Tag name'
-          value={this.tag.name}
+          value={tag.name}
           onChange={this.onChangeTagName}
           />
         <CardActions>
@@ -35,18 +28,17 @@ export class TagView extends React.Component {
     </Card>
   }
 
-  @action resetTag (props) {
-    this.tag = props.tag
-  }
-
   @action onChangeTagName = (e) => {
-    this.tag.name = e.target.value
+    const {tag} = this.props
+    tag.name = e.target.value
   }
 
   @action onDelete = () => {
-    const {viewState, contactStore, tagStore} = this.props
-    viewState.selectNothing()
-    contactStore.deleteTag(this.tag.name)
-    tagStore.deleteTag(this.tag)
+    const {tag} = this.props
+    state.selectNothing()
+    state.contacts.forEach((contact) => {
+      contact.tags.remove(tag.id)
+    })
+    state.tags.splice(state.tags.indexOf(tag), 1)
   }
 }

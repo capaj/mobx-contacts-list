@@ -3,16 +3,17 @@ import {observer} from 'mobx-react'
 
 import {List, ListItem} from 'material-ui/List'
 import Subheader from 'material-ui/Subheader'
+import state from '../stores/global-store'
 
-const TagOverviewEntry = observer(({tag, viewState}) => <ListItem
+const TagOverviewEntry = observer(({tag}) => <ListItem
   primaryText={tag.name}
-  onClick={() => viewState.selectTag(tag)}
-  className={viewState.selection === tag ? 'selected' : null}
+  onClick={() => state.select('tag', tag)}
+  className={state.selected === tag ? 'selected' : null}
 />)
 
-export const TagsOverview = observer(({tagStore, viewState}) =>
+export const TagsOverview = observer(() =>
   <List>
     <Subheader>Tags</Subheader>
-    {tagStore.tags.map(tag => <TagOverviewEntry key={tag.id} tag={tag} viewState={viewState} />)}
+    {state.tags.map(tag => <TagOverviewEntry key={tag.id} tag={tag} />)}
   </List>
 )

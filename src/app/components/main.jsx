@@ -5,10 +5,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import {deepOrange500} from 'material-ui/styles/colors'
 import DevTools from 'mobx-react-devtools'
 import {Card, CardTitle} from 'material-ui/Card'
-
-import {ViewState} from '../stores/view-state'
-import {isTag} from '../stores/tag-store'
-import {isContact} from '../stores/contact-store'
+import state from '../stores/global-store'
 
 import {ContactsOverview} from './contacts-overview'
 import {TagsOverview} from './tags-overview'
@@ -24,23 +21,12 @@ const muiTheme = getMuiTheme({
 @observer
 class Main extends React.Component {
 
-  componentWillMount () {
-    this.props.contactStore.loadContacts()
-    this.viewState = new ViewState(this.props.contactStore, this.props.tagStore)
-  }
-
   render () {
-    const {contactStore, tagStore} = this.props
-    const {viewState} = this
-
     let content
-    if (isContact(viewState.selection)) {
-      content = <ContactView
-        contact={viewState.selection}
-        viewState={viewState}
-            />
-    } else if (isTag(viewState.selection)) {
-      content = <TagView tag={viewState.selection} viewState={viewState} contactStore={contactStore} tagStore={tagStore} />
+    if (state.selectedType === 'contact') {
+      content = <ContactView contact={state.selected} />
+    } else if (state.selectedType === 'tag') {
+      content = <TagView tag={state.selected} />
     } else {
       content = <span>"Please select a contact or tag"</span>
     }
@@ -50,8 +36,8 @@ class Main extends React.Component {
         <DevTools />
         <Card className='sidebar'>
           <CardTitle title='My Contacts' />
-          <ContactsOverview contactStore={contactStore} viewState={viewState} />
-          <TagsOverview tagStore={tagStore} viewState={viewState} />
+          <ContactsOverview />
+          <TagsOverview />
         </Card>
         <div className='content'>
           {content}
